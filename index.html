@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MicroTask USDT</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">MicroTask<span>USDT</span></div>
+      <div class="wallet-pill" onclick="switchView('wallet')">
+        <span id="wallet-balance">1.5000</span> USDT
+      </div>
+    </header>
+
+    <main class="app-content">
+      <section id="view-tasks" class="view active">
+        <div class="filter-tabs">
+          <button class="filter-tab active" onclick="filterJobs('all')">All</button>
+          <button class="filter-tab" onclick="filterJobs('telegram')">Telegram</button>
+          <button class="filter-tab" onclick="filterJobs('twitter')">Twitter</button>
+          <button class="filter-tab" onclick="filterJobs('instagram')">Instagram</button>
+          <button class="filter-tab" onclick="filterJobs('facebook')">Facebook</button>
+          <button class="filter-tab" onclick="filterJobs('whatsapp')">WhatsApp</button>
+        </div>
+        <div id="jobs-list" style="display: flex; flex-direction: column; gap: 16px;"></div>
+      </section>
+
+      <section id="view-wallet" class="view">
+        <div class="card">
+          <p style="color: var(--text-muted);">Available Balance</p>
+          <h1 id="wallet-main-balance" style="font-size: 32px; color: var(--accent);">1.5000 USDT</h1>
+        </div>
+        <div class="card">
+          <h2 style="font-size: 16px; margin-bottom: 4px;">Withdraw Funds (BEP20)</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Limits: Min $0.50 - Max $100.00</p>
+          <div class="form-group" style="gap: 12px;">
+            <input type="number" id="wd-amount" class="form-control" placeholder="Amount (Min $0.50, Max $100)">
+            <input type="text" id="wd-address" class="form-control" placeholder="BEP20 Wallet Address (0x...)">
+            <button class="btn" onclick="processWithdrawal()">Submit Withdrawal</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-post" class="view">
+        <div class="card">
+          <h2 style="font-size: 16px; margin-bottom: 4px;">Post a New Microjob</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Create tasks for users to complete.</p>
+          <p style="font-size: 13px; color: var(--accent); margin-bottom: 12px; font-weight: 500;">যারা পোস্ট করবেন তারা এডমিনের সাথে কন্টাক্ট করে এখানে পাবলিশ করতে পারেন।</p>
+          <div class="form-group" style="gap: 12px;">
+            <div class="form-group">
+              <label class="form-label">Platform</label>
+              <select id="post-platform" class="form-control">
+                <option value="telegram">Telegram</option>
+                <option value="twitter">Twitter / X</option>
+                <option value="instagram">Instagram</option>
+                <option value="facebook">Facebook</option>
+                <option value="whatsapp">WhatsApp</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Task Type</label>
+              <select id="post-type" class="form-control">
+                <option value="Join">Join</option>
+                <option value="Follow">Follow</option>
+                <option value="Like">Like</option>
+                <option value="Comment">Comment</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Task Title</label>
+              <input type="text" id="post-title" class="form-control" placeholder="e.g. Join Telegram Group">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Reward (USDT)</label>
+              <input type="number" step="0.001" id="post-reward" class="form-control" placeholder="e.g. 0.005">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Task Link URL</label>
+              <input type="url" id="post-link" class="form-control" placeholder="https://...">
+            </div>
+            <button class="btn" onclick="postNewJob()">Publish Job</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="view-history" class="view">
+        <div class="card">
+          <h2 style="font-size: 16px; margin-bottom: 4px;">Completed Tasks History</h2>
+          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 12px;">Tasks you have successfully completed and earned rewards for.</p>
+        </div>
+        <div id="history-list" style="display: flex; flex-direction: column; gap: 12px;"></div>
+      </section>
+
+      <section id="view-admin" class="view">
+        <div class="card">
+          <h3 style="font-size: 18px; margin-bottom: 8px;">Admin & Support Contact</h3>
+          <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 12px;">Need help with task approvals, deposits, or platform issues? Reach out directly to the administrator.</p>
+          <div style="background: var(--bg-surface); padding: 14px; border-radius: 8px; display: flex; align-items: center; justify-content: space-between;">
+            <div>
+              <p style="font-size: 12px; color: var(--text-muted);">Telegram Support</p>
+              <p style="font-size: 16px; font-weight: 600; color: var(--accent);">@jobaid2296</p>
+            </div>
+            <a href="https://t.me/jobaid2296" target="_blank" class="btn" style="width: auto; padding: 8px 16px; font-size: 14px;">Contact</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="bottom-nav">
+      <button class="nav-item active" onclick="switchView('tasks')">Tasks</button>
+      <button class="nav-item" onclick="switchView('post')">Post</button>
+      <button class="nav-item" onclick="switchView('wallet')">Wallet</button>
+      <button class="nav-item" onclick="switchView('history')">History</button>
+      <button class="nav-item" onclick="switchView('admin')">Admin</button>
+    </nav>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
